@@ -4,8 +4,7 @@ pub struct HotRun {
 	pub exit: fn(),
 	
 	pub debug: fn(message: &str),
-	pub message_box: fn(title: &str, message: &str, level: MessageLevel),
-	pub adv_message_box: fn(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons),
+	pub message_box: fn(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons),
 	
 }
 
