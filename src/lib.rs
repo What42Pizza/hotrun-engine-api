@@ -16,7 +16,7 @@ macro_rules! log {
 	($format:expr $(, $value:expr)*) => {
 		let mut message = format!($format $(, $value)*);
 		message.push('\n');
-		crate::hotrun().log(&message);
+		(crate::hotrun().log)(&message);
 	};
 }
 
