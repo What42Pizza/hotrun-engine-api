@@ -1,5 +1,5 @@
 [package]
-name = "hotrun-engine-types"
+name = "hotrun-engine-api"
 version = "0.1.0"
 edition = "2024"
 
