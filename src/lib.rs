@@ -3,9 +3,21 @@ pub struct HotRun {
 	
 	pub exit: fn(),
 	
+	pub log: fn(&str),
 	pub debug: fn(message: &str),
 	pub message_box: fn(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons),
 	
+}
+
+
+
+#[macro_export]
+macro_rules! log {
+	($format:expr $(, $value:expr)*) => {
+		let mut message = format!($format $(, $value)*);
+		message.push('\n');
+		crate::hotrun().log(&message);
+	};
 }
 
 
