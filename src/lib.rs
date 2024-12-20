@@ -1,3 +1,7 @@
+#![feature(try_trait_v2)]
+
+
+
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
 	pub use crate::for_games::*;

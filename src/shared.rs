@@ -1,4 +1,5 @@
-use anyhow::*;
+use std::ops::{ControlFlow, FromResidual, Try};
+use anyhow::Error;
 use ffi_string::*;
 
 
@@ -38,6 +39,26 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for
 pub enum Result<T> {
 	Ok (T),
 	Err (Error),
+}
+
+impl<T> Try for Result<T> {
+	type Output = T;
+	type Residual = Error;
+	fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {
+		match self {
+			Self::Ok(v) => ControlFlow::Continue(v),
+			Self::Err(err) => ControlFlow::Break(err),
+		}
+	}
+	fn from_output(output: Self::Output) -> Self {
+		Self::Ok(output)
+	}
+}
+
+impl<T> FromResidual for Result<T> {
+	fn from_residual(residual: <Self as Try>::Residual) -> Self {
+		Self::Err(residual)
+	}
 }
 
 
