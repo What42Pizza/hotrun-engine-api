@@ -29,6 +29,6 @@ macro_rules! log {
 	($format:expr $(, $value:expr)*) => {
 		let mut message = format!($format $(, $value)*);
 		message.push('\n');
-		hotrun_engine_api::for_games::log_str(&message);
+		hotrun_engine_api::for_games::log(&message);
 	};
 }
