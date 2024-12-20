@@ -1,11 +1,11 @@
 #[derive(Copy, Clone)]
 pub struct HotRunFns {
 	
-	pub fn_exit: fn(),
+	pub exit: fn(),
 	
-	pub fn_log: fn(&str),
-	pub fn_debug: fn(message: &str),
-	pub fn_message_box: fn(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons),
+	pub log: fn(&str),
+	pub debug: fn(message: &str),
+	pub message_box: fn(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons),
 	
 }
 

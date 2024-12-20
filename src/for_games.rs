@@ -16,11 +16,11 @@ pub fn init_dll_connection(hotrun_fns: HotRunFns) {
 
 
 
-pub fn exit() { unsafe { (HOTRUN_FNS.assume_init().fn_exit)() } }
+pub fn exit() { unsafe { (HOTRUN_FNS.assume_init().exit)() } }
 
-pub fn log(message: &str) { unsafe { (HOTRUN_FNS.assume_init().fn_log)(message) } }
-pub fn debug(message: &str) { unsafe { (HOTRUN_FNS.assume_init().fn_debug)(message) } }
-pub fn message_box(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons) { unsafe { (HOTRUN_FNS.assume_init().fn_message_box)(title, message, level, buttons) } }
+pub fn log(message: &str) { unsafe { (HOTRUN_FNS.assume_init().log)(message) } }
+pub fn debug(message: &str) { unsafe { (HOTRUN_FNS.assume_init().debug)(message) } }
+pub fn message_box(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons) { unsafe { (HOTRUN_FNS.assume_init().message_box)(title, message, level, buttons) } }
 
 
 
