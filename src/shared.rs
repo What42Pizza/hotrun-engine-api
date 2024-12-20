@@ -18,16 +18,6 @@ pub struct HotRunFns {
 
 
 
-#[repr(C)]
-pub enum FFIResult<T> {
-	Ok (T),
-	Err (FFIString),
-}
-
-// todo: implement convenience functions for FFIResult
-
-
-
 pub(crate) trait IsCFunctionPointer: Copy {}
 
 impl<Ret> IsCFunctionPointer for extern "C" fn() -> Ret {}
