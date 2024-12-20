@@ -3,7 +3,7 @@ pub struct HotRunFns {
 	
 	pub exit: fn(),
 	
-	pub log: fn(&str),
+	pub log_str: fn(&str),
 	pub debug: fn(message: &str),
 	pub message_box: fn(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons),
 	
