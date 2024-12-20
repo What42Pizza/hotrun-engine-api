@@ -22,6 +22,11 @@ impl<'a> FFIStr<'a> {
 			core::str::from_raw_parts(self.bytes, self.len as usize).to_string()
 		}
 	}
+	pub fn as_str(&self) -> &'a str {
+		unsafe {
+			core::str::from_raw_parts(self.bytes, self.len as usize)
+		}
+	}
 }
 
 
