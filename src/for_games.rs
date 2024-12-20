@@ -16,11 +16,11 @@ pub fn init_dll_connection(hotrun_fns: HotRunFns) {
 
 
 
-pub fn exit() { unsafe { (HOTRUN_FNS.assume_init().exit)() } }
+#[inline] pub fn exit() { unsafe { (HOTRUN_FNS.assume_init().exit)() } }
 
-pub fn log_str(message: &str) { unsafe { (HOTRUN_FNS.assume_init().log_str)(message) } }
-pub fn debug(message: &str) { unsafe { (HOTRUN_FNS.assume_init().debug)(message) } }
-pub fn message_box(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons) { unsafe { (HOTRUN_FNS.assume_init().message_box)(title, message, level, buttons) } }
+#[inline] pub fn log(message: &str) { unsafe { (HOTRUN_FNS.assume_init().log)(message) } }
+#[inline] pub fn debug(message: &str) { unsafe { (HOTRUN_FNS.assume_init().debug)(message) } }
+#[inline] pub fn message_box(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons) { unsafe { (HOTRUN_FNS.assume_init().message_box)(title, message, level, buttons) } }
 
 
 
@@ -29,6 +29,6 @@ macro_rules! log {
 	($format:expr $(, $value:expr)*) => {
 		let mut message = format!($format $(, $value)*);
 		message.push('\n');
-		(crate::hotrun().log)(&message);
+		hotrun_engine_api::for_games::log_str(&message);
 	};
 }
