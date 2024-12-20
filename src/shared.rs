@@ -33,6 +33,8 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for
 
 
 
+#[derive(Debug)]
+#[repr(C)]
 pub enum FFIResult<T> {
 	Ok (T),
 	Err (Error),
