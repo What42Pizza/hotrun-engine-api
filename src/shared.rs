@@ -35,18 +35,9 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for
 
 #[derive(Debug)]
 #[repr(C)]
-pub enum FFIResult<T> {
+pub enum Result<T> {
 	Ok (T),
 	Err (Error),
-}
-
-impl<T> FFIResult<T> {
-	pub fn to_anyhow(self) -> Result<T> {
-		match self {
-			Self::Ok(v) => Ok(v),
-			Self::Err(err) => Err(err),
-		}
-	}
 }
 
 
