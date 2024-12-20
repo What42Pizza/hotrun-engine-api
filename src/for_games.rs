@@ -1,6 +1,5 @@
 use crate::shared::{FFIStr, HotRunFns, IsCFunctionPointer, MessageButtons, MessageLevel};
 use std::mem::{transmute, MaybeUninit};
-use anyhow::*;
 
 
 
@@ -31,7 +30,7 @@ pub fn init_dll_connection(hotrun_fns: HotRunFns) {
 }
 
 #[allow(private_bounds)]
-#[inline] pub fn set_fn<T: IsCFunctionPointer>(name: &str, func: T) -> Result<()> {
+#[inline] pub fn set_fn<T: IsCFunctionPointer>(name: &str, func: T) -> bool {
 	unsafe {
 		let func = *transmute::<&T, &extern "C" fn()>(&func);
 		(HOTRUN_FNS.assume_init().set_fn)(FFIStr::new(name), func)

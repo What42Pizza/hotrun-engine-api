@@ -1,7 +1,3 @@
-use anyhow::*;
-
-
-
 #[repr(C)]
 pub struct FFIStr<'a> {
 	bytes: &'a u8,
@@ -37,7 +33,7 @@ pub struct HotRunFns {
 	
 	pub exit: extern "C" fn(),
 	pub get_fn: extern "C" fn(name: FFIStr) -> Option<extern "C" fn()>,
-	pub set_fn: extern "C" fn(name: FFIStr, func: extern "C" fn()) -> Result<()>,
+	pub set_fn: extern "C" fn(name: FFIStr, func: extern "C" fn()) -> bool,
 	
 	pub log: extern "C" fn(FFIStr),
 	pub debug: extern "C" fn(message: FFIStr),
