@@ -1,5 +1,6 @@
-use crate::shared::{HotRunFns, MessageButtons, MessageLevel};
-use std::mem::MaybeUninit;
+use crate::shared::{HotRunFns, IsFunctionPointer, MessageButtons, MessageLevel};
+use std::mem::{transmute, MaybeUninit};
+use anyhow::*;
 
 
 
@@ -16,11 +17,34 @@ pub fn init_dll_connection(hotrun_fns: HotRunFns) {
 
 
 
+
+
 #[inline] pub fn exit() { unsafe { (HOTRUN_FNS.assume_init().exit)() } }
+
+#[allow(private_bounds)]
+#[inline] pub fn get_fn<T: IsFunctionPointer>(name: &str) -> Option<T> {
+	unsafe {
+		let func = ((HOTRUN_FNS.assume_init().get_fn)(name))?;
+		let func = *transmute::<&fn(), &T>(&func);
+		Some(func)
+	}
+}
+
+#[allow(private_bounds)]
+#[inline] pub fn set_fn<T: IsFunctionPointer>(name: &str, func: T) -> Result<()> {
+	unsafe {
+		let func = *transmute::<&T, &fn()>(&func);
+		(HOTRUN_FNS.assume_init().set_fn)(name, func)
+	}
+}
+
+
 
 #[inline] pub fn log(message: &str) { unsafe { (HOTRUN_FNS.assume_init().log)(message) } }
 #[inline] pub fn debug(message: &str) { unsafe { (HOTRUN_FNS.assume_init().debug)(message) } }
 #[inline] pub fn message_box(title: &str, message: &str, level: MessageLevel, buttons: MessageButtons) { unsafe { (HOTRUN_FNS.assume_init().message_box)(title, message, level, buttons) } }
+
+
 
 
 
