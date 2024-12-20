@@ -17,7 +17,7 @@ macro_rules! create_hooks {
 		$can_unload_reload_fn:ident,
 		$on_tick_reload_fn:ident: order $on_tick_order:expr,
 		$on_world_update_reload_fn:ident: order $on_world_update_order:expr,
-	) => {
+	) => { mod engine_hooks {
 		
 		
 		
@@ -95,5 +95,5 @@ macro_rules! create_hooks {
 		
 		
 		
-	};
+	}};
 }
