@@ -1,3 +1,4 @@
+use anyhow::*;
 use ffi_string::*;
 
 
@@ -29,6 +30,22 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Ret> IsCFunctionPointer for extern "C" fn(Arg
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) -> Ret {}
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7) -> Ret {}
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8) -> Ret {}
+
+
+
+pub enum FFIResult<T> {
+	Ok (T),
+	Err (Error),
+}
+
+impl<T> FFIResult<T> {
+	pub fn to_anyhow(self) -> Result<T> {
+		match self {
+			Self::Ok(v) => Ok(v),
+			Self::Err(err) => Err(err),
+		}
+	}
+}
 
 
 
