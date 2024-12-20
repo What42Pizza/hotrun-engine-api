@@ -5,3 +5,6 @@ edition = "2024"
 
 [features]
 is-engine-dep = []
+
+[dependencies]
+ffi-string = "1.0.0"

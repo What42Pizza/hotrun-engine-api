@@ -1,29 +1,4 @@
-#[repr(C)]
-pub struct FFIStr<'a> {
-	bytes: &'a u8,
-	len: u32,
-}
-
-impl<'a> FFIStr<'a> {
-	pub fn new(from: &'a str) -> Self {
-		unsafe {
-			Self {
-				bytes: &*from.as_ptr(),
-				len: from.as_bytes().len() as u32,
-			}
-		}
-	}
-	pub fn to_string(&self) -> String {
-		unsafe {
-			core::str::from_raw_parts(self.bytes, self.len as usize).to_string()
-		}
-	}
-	pub fn as_str(&self) -> &'a str {
-		unsafe {
-			core::str::from_raw_parts(self.bytes, self.len as usize)
-		}
-	}
-}
+use ffi_string::*;
 
 
 
@@ -40,6 +15,16 @@ pub struct HotRunFns {
 	pub message_box: extern "C" fn(title: FFIStr, message: FFIStr, level: MessageLevel, buttons: MessageButtons),
 	
 }
+
+
+
+#[repr(C)]
+pub enum FFIResult<T> {
+	Ok (T),
+	Err (FFIString),
+}
+
+// todo: implement convenience functions for FFIResult
 
 
 

@@ -1,5 +1,6 @@
-use crate::shared::{FFIStr, HotRunFns, IsCFunctionPointer, MessageButtons, MessageLevel};
+use crate::shared::{HotRunFns, IsCFunctionPointer, MessageButtons, MessageLevel};
 use std::mem::{transmute, MaybeUninit};
+use ffi_string::*;
 
 
 
