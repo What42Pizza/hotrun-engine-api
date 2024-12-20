@@ -1,19 +1,6 @@
-use crate::shared::{HotRunFns, IsCFunctionPointer, MessageButtons, MessageLevel};
-use std::mem::{transmute, MaybeUninit};
+use crate::{engine_to_game_hooks::HOTRUN_FNS, shared::{IsCFunctionPointer, MessageButtons, MessageLevel}};
+use std::mem::transmute;
 use ffi_string::*;
-
-
-
-static mut HOTRUN_FNS: MaybeUninit<HotRunFns> = MaybeUninit::uninit();
-static mut IS_SET: bool = false;
-
-pub fn init_dll_connection(hotrun_fns: HotRunFns) {
-	unsafe {
-		if IS_SET { panic!("cannot init dll twice"); }
-		IS_SET = true;
-		HOTRUN_FNS = MaybeUninit::new(hotrun_fns);
-	}
-}
 
 
 
@@ -53,6 +40,7 @@ macro_rules! log {
 	($format:expr $(, $value:expr)*) => {
 		let mut message = format!($format $(, $value)*);
 		message.push('\n');
+		print!("{message}");
 		hotrun_engine_api::for_games::log(&message);
 	};
 }
