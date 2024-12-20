@@ -1,3 +1,7 @@
+#![feature(str_from_raw_parts)]
+
+
+
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
 	pub use crate::for_games::*;
