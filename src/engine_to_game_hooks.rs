@@ -73,7 +73,11 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn pre_reload() -> $crate::errors::Result<()> {
-			$pre_reload_reload_fn()
+			$pre_reload_reload_fn()?;
+			unsafe {
+				MODULE_DATA.assume_init_drop();
+			}
+			$crate::errors::Result::Ok(())
 		}
 		
 		
@@ -85,7 +89,11 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn on_unload() -> $crate::errors::Result<()> {
-			$on_unload_reload_fn()
+			$on_unload_reload_fn()?;
+			unsafe {
+				MODULE_DATA.assume_init_drop();
+			}
+			$crate::errors::Result::Ok(())
 		}
 		
 		// if you have, for example, multiple threads that may still be running, this can let the engine know to wait until your conditions are met before unloading the dll
