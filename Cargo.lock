@@ -4,9 +4,9 @@ version = 4
 
 [[package]]
 name = "ffi-string"
-version = "1.0.0"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "220609bff58cc99c18e09ab06cfe56976dc05ed1fa76142e69f751aef4faffb0"
+checksum = "2b80376612177a47cc3b5dc264f304ab083e36474b591176e9532ff837c93568"
 
 [[package]]
 name = "hotrun-engine-api"

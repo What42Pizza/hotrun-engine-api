@@ -3,20 +3,20 @@
 
 
 
-// suggested prelude usage: `use hotrun_engine_api::prelude as api;`
+// suggested prelude usage: `use hotrun_engine_api::{prelude as api, log, errors::Result::*};`
 
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
 	pub use crate::for_games::*;
 	pub use crate::shared::*;
-	pub use crate::errors::{*, Result::*};
+	pub use crate::errors::*;
 	pub use ffi_string::*;
 }
 #[cfg(feature = "is-engine-dep")]
 pub mod prelude {
 	pub use crate::for_engine::*;
 	pub use crate::shared::*;
-	pub use crate::errors::{*, Result::*};
+	pub use crate::errors::*;
 	pub use ffi_string::*;
 }
 

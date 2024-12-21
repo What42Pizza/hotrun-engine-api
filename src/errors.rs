@@ -1,4 +1,5 @@
 use std::{backtrace::Backtrace, convert::Infallible, fmt::Display, ops::{ControlFlow, FromResidual, Try}, result::Result as StdResult};
+use ffi_string::*;
 use self::Result::*;
 
 
@@ -6,9 +7,10 @@ use self::Result::*;
 
 
 #[derive(Debug)]
+#[repr(C)]
 pub struct Error {
 	pub messages: Vec<String>,
-	pub trace: Backtrace,
+	pub trace: FFIString,
 }
 
 impl Display for Error {
@@ -31,7 +33,7 @@ impl Error {
 	pub fn new(msg: impl Into<String>) -> Self {
 		Self {
 			messages: vec!(msg.into()),
-			trace: Backtrace::capture(),
+			trace: FFIString::from(Backtrace::capture().to_string()), // todo: make this prettier?
 		}
 	}
 	
