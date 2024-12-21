@@ -117,15 +117,19 @@ impl<T> Result<T> {
 		}
 	}
 	
-	pub fn context(mut self, msg: impl ToString) -> Self {
+	pub fn context(mut self, msg: impl Display) -> Self {
 		let Err(error) = &mut self else { return self; };
 		error.messages.push(msg.to_string().into_ffi_string());
 		self
 	}
 	
-	pub fn with_context(mut self, msg: impl FnOnce() -> String) -> Self {
+	pub fn with_context<F, M>(mut self, msg: F) -> Self
+	where 
+		M: Display,
+		F: FnOnce() -> M,
+	{
 		let Err(error) = &mut self else { return self; };
-		error.messages.push(msg().into_ffi_string());
+		error.messages.push(msg().to_string().to_ffi_string());
 		self
 	}
 	

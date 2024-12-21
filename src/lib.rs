@@ -14,7 +14,6 @@ pub mod prelude {
 }
 #[cfg(feature = "is-engine-dep")]
 pub mod prelude {
-	pub use crate::for_engine::*;
 	pub use crate::shared::*;
 	pub use crate::errors::*;
 	pub use ffi_string::*;
@@ -24,7 +23,5 @@ pub mod prelude {
 pub mod for_games;
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod engine_to_game_hooks;
-#[cfg(feature = "is-engine-dep")]
-pub mod for_engine;
 pub mod shared;
 pub mod errors;
