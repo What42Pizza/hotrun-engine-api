@@ -1,4 +1,4 @@
-use std::{convert::Infallible, ops::{ControlFlow, FromResidual, Try}};
+use std::{convert::Infallible, ops::{ControlFlow, FromResidual, Try}, result::Result as StdResult};
 use anyhow::Error;
 use ffi_string::*;
 
@@ -60,6 +60,13 @@ impl<T> FromResidual for Result<T> {
 	fn from_residual(residual: <Self as Try>::Residual) -> Self {
 		let Result::Err(err) = residual;
 		Self::Err(err)
+	}
+}
+
+impl<T, E: Into<Error>> FromResidual<StdResult<Infallible, E>> for Result<T> {
+	fn from_residual(residual: StdResult<Infallible, E>) -> Self {
+		let StdResult::Err(err) = residual;
+		Self::Err(err.into())
 	}
 }
 
