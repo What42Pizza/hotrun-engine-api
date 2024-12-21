@@ -15,7 +15,7 @@ pub struct Error {
 
 impl Display for Error {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		let mut messages = self.messages.iter();
+		let mut messages = self.messages.iter().rev();
 		if let Some(msg) = messages.next() {
 			writeln!(f, "{msg}")?;
 		}

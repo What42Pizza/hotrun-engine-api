@@ -10,6 +10,7 @@ pub static mut HOTRUN_FNS: MaybeUninit<HotRunFns> = MaybeUninit::uninit();
 #[macro_export]
 macro_rules! create_hooks {
 	(
+		$persistent_data_fn:tt: $module_data_type:ty,
 		$on_load_fn:tt: order $on_load_order:expr,
 		$post_reload_fn:tt: order $post_reload_order:expr,
 		$pre_reload_reload_fn:tt: order $pre_reload_order:expr,
@@ -17,9 +18,26 @@ macro_rules! create_hooks {
 		$can_unload_reload_fn:tt,
 		$on_tick_reload_fn:tt: order $on_tick_order:expr,
 		$on_world_update_fn:tt: order $on_world_update_order:expr,
-	) => { mod engine_hooks {
+	) => {
+		
+		pub fn persistent_data() -> &'static $module_data_type {
+			unsafe {
+				#[allow(static_mut_refs)]
+				engine_hooks::MODULE_DATA.assume_init_ref()
+			}
+		}
+		pub fn persistent_data_mut() -> &'static mut $module_data_type {
+			unsafe {
+				#[allow(static_mut_refs)]
+				engine_hooks::MODULE_DATA.assume_init_mut()
+			}
+		}
+		
+	mod engine_hooks {
 		
 		use std::mem::MaybeUninit;
+		
+		pub static mut MODULE_DATA: MaybeUninit<$module_data_type> = MaybeUninit::uninit();
 		
 		
 		
@@ -33,6 +51,7 @@ macro_rules! create_hooks {
 		pub extern "C" fn on_load(hotrun_fns: $crate::shared::HotRunFns) -> $crate::errors::Result<()> {
 			unsafe {
 				$crate::engine_to_game_hooks::HOTRUN_FNS = MaybeUninit::new(hotrun_fns);
+				MODULE_DATA = MaybeUninit::new($persistent_data_fn()?);
 			}
 			$on_load_fn()
 		}
