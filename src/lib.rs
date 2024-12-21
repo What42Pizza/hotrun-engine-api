@@ -3,22 +3,27 @@
 
 
 
-// suggested prelude usage:
-// `pub use hotrun_engine_api::{prelude as api, log, errors::{Result::*, StdResultFns}};`
-// `pub use hotrun_engine_api::ffi_string::{StrToFFI, StringToFFI};`
-
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
-	pub use crate::for_games::*;
-	pub use crate::shared::*;
-	pub use crate::errors::*;
-	pub use ffi_string::*;
+	pub use crate::log;
+	pub use crate::errors::Result::*;
+	pub use ffi_string::{StrToFFI, StringToFFI};
+	pub mod api {
+		pub use crate::for_games::*;
+		pub use crate::shared::*;
+		pub use crate::errors::*;
+		pub use ffi_string::*;
+	}
 }
 #[cfg(feature = "is-engine-dep")]
 pub mod prelude {
-	pub use crate::shared::*;
-	pub use crate::errors::*;
-	pub use ffi_string::*;
+	pub use crate::errors::Result::*;
+	pub use ffi_string::{StrToFFI, StringToFFI};
+	pub mod api {
+		pub use crate::shared::*;
+		pub use crate::errors::*;
+		pub use ffi_string::*;
+	}
 }
 pub use ffi_string;
 
