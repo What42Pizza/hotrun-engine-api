@@ -10,13 +10,13 @@ pub mod prelude {
 	pub use crate::for_games::*;
 	pub use crate::shared::*;
 	pub use crate::errors::*;
-	pub use ffi_string;
+	pub use ffi_string::{self, *};
 }
 #[cfg(feature = "is-engine-dep")]
 pub mod prelude {
 	pub use crate::shared::*;
 	pub use crate::errors::*;
-	pub use ffi_string;
+	pub use ffi_string::{self, *};
 }
 
 #[cfg(not(feature = "is-engine-dep"))]
