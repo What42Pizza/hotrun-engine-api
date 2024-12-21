@@ -9,7 +9,7 @@ use self::Result::*;
 #[derive(Debug)]
 #[repr(C)]
 pub struct Error {
-	pub messages: Vec<String>,
+	pub messages: Vec<FFIString>,
 	pub trace: FFIString,
 }
 
@@ -28,13 +28,19 @@ impl Display for Error {
 
 impl Error {
 	
-	pub const BACKTRACE_TRAIL_LEN: usize = 1;
-	
 	pub fn new(msg: impl Into<String>) -> Self {
 		Self {
-			messages: vec!(msg.into()),
-			trace: FFIString::from(Backtrace::capture().to_string()), // todo: make this prettier?
+			messages: vec!(msg.into().into_ffi_string()),
+			trace: Self::get_backtrace(1),
 		}
+	}
+	
+	pub fn get_backtrace(pop_count: usize) -> FFIString {
+		let mut output = String::new();
+		for frame in Backtrace::capture().frames().iter().skip(pop_count + 1) {
+			output += &format!("{frame:?}\n");
+		}
+		output.into_ffi_string()
 	}
 	
 }
@@ -78,6 +84,22 @@ impl<T, E: Into<Error>> FromResidual<StdResult<Infallible, E>> for Result<T> {
 	}
 }
 
+pub trait StdResultFns<T> {
+	fn to_api_result(self) -> Result<T>;
+}
+
+impl<T, E: ToString> StdResultFns<T> for StdResult<T, E> {
+	fn to_api_result(self) -> Result<T> {
+		match self {
+			StdResult::Ok(v) => Result::Ok(v),
+			StdResult::Err(err) => Result::Err(Error {
+				messages: vec!(err.to_string().into_ffi_string()),
+				trace: Error::get_backtrace(2),
+			}),
+		}
+	}
+}
+
 impl<T> Result<T> {
 	
 	#[cfg(feature = "result-unwrap")]
@@ -97,12 +119,12 @@ impl<T> Result<T> {
 	
 	pub fn context(&mut self, msg: impl ToString) {
 		let Err(error) = self else { return; };
-		error.messages.push(msg.to_string());
+		error.messages.push(msg.to_string().into_ffi_string());
 	}
 	
 	pub fn with_context(&mut self, msg: impl FnOnce() -> String) {
 		let Err(error) = self else { return; };
-		error.messages.push(msg());
+		error.messages.push(msg().into_ffi_string());
 	}
 	
 }
