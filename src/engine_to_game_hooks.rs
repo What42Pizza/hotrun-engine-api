@@ -1,9 +1,8 @@
-use crate::prelude::*;
 use std::mem::MaybeUninit;
 
 
 
-pub static mut HOTRUN_FNS: MaybeUninit<HotRunFns> = MaybeUninit::uninit();
+pub static mut HOTRUN_FNS: MaybeUninit<crate::shared::HotRunFns> = MaybeUninit::uninit();
 
 
 
