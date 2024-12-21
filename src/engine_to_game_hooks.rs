@@ -19,6 +19,8 @@ macro_rules! create_hooks {
 		$on_world_update_fn:ident: order $on_world_update_order:expr,
 	) => { mod engine_hooks {
 		
+		use std::mem::MaybeUninit;
+		
 		
 		
 		// load
