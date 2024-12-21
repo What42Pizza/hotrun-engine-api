@@ -1,4 +1,4 @@
-use std::ops::{ControlFlow, FromResidual, Try};
+use std::{convert::Infallible, ops::{ControlFlow, FromResidual, Try}};
 use anyhow::Error;
 use ffi_string::*;
 
@@ -31,6 +31,7 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Ret> IsCFunctionPointer for extern "C" fn(Arg
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) -> Ret {}
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7) -> Ret {}
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8) -> Ret {}
+// if more args are needed, just combine args into tuples
 
 
 
@@ -43,11 +44,11 @@ pub enum Result<T> {
 
 impl<T> Try for Result<T> {
 	type Output = T;
-	type Residual = impl Into<Error>;
+	type Residual = Result<Infallible>;
 	fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {
 		match self {
 			Self::Ok(v) => ControlFlow::Continue(v),
-			Self::Err(err) => ControlFlow::Break(err),
+			Self::Err(err) => ControlFlow::Break(Result::Err(err)),
 		}
 	}
 	fn from_output(output: Self::Output) -> Self {
@@ -57,7 +58,8 @@ impl<T> Try for Result<T> {
 
 impl<T> FromResidual for Result<T> {
 	fn from_residual(residual: <Self as Try>::Residual) -> Self {
-		Self::Err(residual.into())
+		let Result::Err(err) = residual;
+		Self::Err(err)
 	}
 }
 
