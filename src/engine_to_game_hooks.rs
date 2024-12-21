@@ -3,20 +3,20 @@ use std::mem::MaybeUninit;
 
 
 
-pub(crate) static mut HOTRUN_FNS: MaybeUninit<HotRunFns> = MaybeUninit::uninit();
+pub static mut HOTRUN_FNS: MaybeUninit<HotRunFns> = MaybeUninit::uninit();
 
 
 
 #[macro_export]
 macro_rules! create_hooks {
 	(
-		$on_load_fn:ident: order $on_load_order:expr,
-		$post_reload_fn:ident: order $post_reload_order:expr,
-		$pre_reload_reload_fn:ident: order $pre_reload_order:expr,
-		$on_unload_reload_fn:ident: order $on_unload_order:expr,
-		$can_unload_reload_fn:ident,
-		$on_tick_reload_fn:ident: order $on_tick_order:expr,
-		$on_world_update_fn:ident: order $on_world_update_order:expr,
+		$on_load_fn:tt: order $on_load_order:expr,
+		$post_reload_fn:tt: order $post_reload_order:expr,
+		$pre_reload_reload_fn:tt: order $pre_reload_order:expr,
+		$on_unload_reload_fn:tt: order $on_unload_order:expr,
+		$can_unload_reload_fn:tt,
+		$on_tick_reload_fn:tt: order $on_tick_order:expr,
+		$on_world_update_fn:tt: order $on_world_update_order:expr,
 	) => { mod engine_hooks {
 		
 		use std::mem::MaybeUninit;
