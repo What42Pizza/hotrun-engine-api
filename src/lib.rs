@@ -3,7 +3,7 @@
 
 
 
-// suggested prelude usage: `use hotrun_engine_api::{prelude as api, log, errors::Result::*};`
+// suggested prelude usage: `use hotrun_engine_api::{prelude as api, log, errors::{Result::*, StdResultFns}};`
 
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
