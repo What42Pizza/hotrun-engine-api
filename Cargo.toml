@@ -5,7 +5,7 @@ edition = "2024"
 
 [features]
 is-engine-dep = []
+result-unwrap = []
 
 [dependencies]
-anyhow = "1.0.94"
 ffi-string = "1.0.0"

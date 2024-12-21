@@ -1,5 +1,3 @@
-use std::{convert::Infallible, ops::{ControlFlow, FromResidual, Try}, result::Result as StdResult};
-use anyhow::Error;
 use ffi_string::*;
 
 
@@ -32,43 +30,6 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Ret> IsCFunctionPointer for extern "C" 
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7) -> Ret {}
 impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for extern "C" fn(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8) -> Ret {}
 // if more args are needed, just combine args into tuples
-
-
-
-#[derive(Debug)]
-#[repr(C)]
-pub enum Result<T> {
-	Ok (T),
-	Err (Error),
-}
-
-impl<T> Try for Result<T> {
-	type Output = T;
-	type Residual = Result<Infallible>;
-	fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {
-		match self {
-			Self::Ok(v) => ControlFlow::Continue(v),
-			Self::Err(err) => ControlFlow::Break(Result::Err(err)),
-		}
-	}
-	fn from_output(output: Self::Output) -> Self {
-		Self::Ok(output)
-	}
-}
-
-impl<T> FromResidual for Result<T> {
-	fn from_residual(residual: <Self as Try>::Residual) -> Self {
-		let Result::Err(err) = residual;
-		Self::Err(err)
-	}
-}
-
-impl<T, E: Into<Error>> FromResidual<StdResult<Infallible, E>> for Result<T> {
-	fn from_residual(residual: StdResult<Infallible, E>) -> Self {
-		let StdResult::Err(err) = residual;
-		Self::Err(err.into())
-	}
-}
 
 
 

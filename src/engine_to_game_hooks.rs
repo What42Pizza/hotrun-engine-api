@@ -32,7 +32,7 @@ macro_rules! create_hooks {
 			unsafe {
 				HOTRUN_FNS = MaybeUninit::new(hotrun_fns);
 			}
-			Result::from_anyhow($on_load_fn())
+			$on_load_fn()
 		}
 		
 		
@@ -44,7 +44,7 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn post_reload() -> $crate::shared::Result<()> {
-			Result::from_anyhow($post_reload_fn())
+			$post_reload_fn()
 		}
 		
 		#[unsafe(no_mangle)]
@@ -52,7 +52,7 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn pre_reload() -> $crate::shared::Result<()> {
-			Result::from_anyhow($pre_reload_reload_fn())
+			$pre_reload_reload_fn()
 		}
 		
 		
@@ -64,13 +64,13 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn on_unload() -> $crate::shared::Result<()> {
-			Result::from_anyhow($on_unload_reload_fn())
+			$on_unload_reload_fn()
 		}
 		
 		// if you have, for example, multiple threads that may still be running, this can let the engine know to wait until your conditions are met before unloading the dll
 		#[unsafe(no_mangle)]
 		pub extern "C" fn can_unload(is_for_reload: bool) -> $crate::shared::Result<bool> {
-			Result::from_anyhow($can_unload_reload_fn(is_for_reload))
+			$can_unload_reload_fn(is_for_reload)
 		}
 		
 		
@@ -82,7 +82,7 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn on_tick(dt: f32) -> $crate::shared::Result<()> { // this is called roughly 100 times per second, independently if framerate. You should aim to put as much game logic as you can in here
-			Result::from_anyhow($on_tick_reload_fn(dt))
+			$on_tick_reload_fn(dt)
 		}
 		
 		#[unsafe(no_mangle)]
@@ -90,7 +90,7 @@ macro_rules! create_hooks {
 		
 		#[unsafe(no_mangle)]
 		pub extern "C" fn on_world_update(dt: f32) -> $crate::shared::Result<()> { // this is called every frame before rendering. Ideally, this would ONLY ever contain whatever is absolutely required
-			Result::from_anyhow($on_world_update_fn(dt))
+			$on_world_update_fn(dt)
 		}
 		
 		
