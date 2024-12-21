@@ -5,7 +5,7 @@
 
 // suggested prelude usage:
 // `pub use hotrun_engine_api::{prelude as api, log, errors::{Result::*, StdResultFns}};`
-// `pub use hotrun_engine_api::ffi_String::{StrToFFI, StringToFFI};`
+// `pub use hotrun_engine_api::ffi_string::{StrToFFI, StringToFFI};`
 
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
@@ -20,7 +20,7 @@ pub mod prelude {
 	pub use crate::errors::*;
 	pub use ffi_string::*;
 }
-pub use ffi_string::*;
+pub use ffi_string;
 
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod for_games;
