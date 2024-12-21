@@ -6,7 +6,7 @@
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod prelude {
 	pub use crate::log;
-	pub use crate::errors::Result::*;
+	pub use crate::errors::{Result::*, StdResultFns};
 	pub use ffi_string::{StrToFFI, StringToFFI};
 	pub mod api {
 		pub use crate::for_games::*;
@@ -17,7 +17,7 @@ pub mod prelude {
 }
 #[cfg(feature = "is-engine-dep")]
 pub mod prelude {
-	pub use crate::errors::Result::*;
+	pub use crate::errors::{Result::*, StdResultFns};
 	pub use ffi_string::{StrToFFI, StringToFFI};
 	pub mod api {
 		pub use crate::shared::*;
