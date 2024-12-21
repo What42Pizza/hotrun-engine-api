@@ -43,7 +43,7 @@ pub enum Result<T> {
 
 impl<T> Try for Result<T> {
 	type Output = T;
-	type Residual = Error;
+	type Residual = impl Into<Error>;
 	fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {
 		match self {
 			Self::Ok(v) => ControlFlow::Continue(v),
@@ -57,7 +57,7 @@ impl<T> Try for Result<T> {
 
 impl<T> FromResidual for Result<T> {
 	fn from_residual(residual: <Self as Try>::Residual) -> Self {
-		Self::Err(residual)
+		Self::Err(residual.into())
 	}
 }
 
