@@ -43,9 +43,6 @@ macro_rules! create_hooks {
 			
 			// load
 			
-			#[unsafe(no_mangle)]
-			pub static ON_LOAD_ORDER: f32 = $on_load_order;
-			
 			// this is guaranteed to be the first function called, which is why is takes the HotRun argument
 			#[unsafe(no_mangle)]
 			pub extern "C" fn on_load(hotrun_fns: $crate::shared::HotRunFns) -> $crate::errors::Result<()> {
