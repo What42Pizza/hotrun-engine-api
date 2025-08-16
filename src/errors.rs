@@ -1,4 +1,4 @@
-use std::{backtrace::Backtrace, convert::Infallible, fmt::Display, ops::{ControlFlow, FromResidual, Try}, result::Result as StdResult};
+use std::{convert::Infallible, fmt::Display, ops::{ControlFlow, FromResidual, Try}, result::Result as StdResult};
 use ffi_string::*;
 use self::Result::*;
 
@@ -6,50 +6,57 @@ use self::Result::*;
 
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[repr(C)]
 pub struct Error {
-	pub messages: Vec<FFIString>,
-	pub trace: FFIString,
+	pub msg: FFIString,
+	pub contexts: Vec<FFIString>,
+	pub cause: Option<Box<Error>>,
 }
 
 impl Display for Error {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		let mut messages = self.messages.iter().rev();
-		if let Some(msg) = messages.next() {
-			writeln!(f, "{msg}")?;
+		writeln!(f, "Caused by: {}", self.msg)?;
+		for context in &self.contexts {
+			writeln!(f, "While: {context}")?;
 		}
-		for msg in messages {
-			writeln!(f, "| {msg}")?;
+		if let Some(cause) = &self.cause {
+			writeln!(f, "Caused by:")?;
+			cause.fmt(f)
+		} else {
+			StdResult::Ok(())
 		}
-		write!(f, "Trace: {}", self.trace)
 	}
 }
 
 impl Error {
-	
-	pub fn new(msg: impl Into<String>) -> Self {
+	pub fn new(msg: impl ToString) -> Self {
 		Self {
-			messages: vec!(msg.into().into_ffi_string()),
-			trace: Self::get_backtrace(1),
+			msg: msg.to_string().into_ffi_string(),
+			contexts: vec!(),
+			cause: None,
 		}
 	}
-	
-	pub fn get_backtrace(pop_count: usize) -> FFIString {
-		let mut output = String::new();
-		for frame in Backtrace::capture().frames().iter().skip(pop_count + 1) {
-			output += &format!("{frame:?}\n");
+	pub fn with_cause(msg: impl ToString, cause: Error) -> Self {
+		Self {
+			msg: msg.to_string().into_ffi_string(),
+			contexts: vec!(),
+			cause: Some(Box::new(cause)),
 		}
-		output.into_ffi_string()
 	}
-	
+}
+
+impl<T: std::error::Error> From<T> for Error {
+	fn from(value: T) -> Self {
+		Self::new(value)
+	}
 }
 
 
 
 
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[repr(C)]
 pub enum Result<T> {
 	Ok (T),
@@ -88,14 +95,11 @@ pub trait StdResultFns<T> {
 	fn to_api_result(self) -> Result<T>;
 }
 
-impl<T, E: ToString> StdResultFns<T> for StdResult<T, E> {
+impl<T, E: Into<Error>> StdResultFns<T> for StdResult<T, E> {
 	fn to_api_result(self) -> Result<T> {
 		match self {
 			StdResult::Ok(v) => Result::Ok(v),
-			StdResult::Err(err) => Result::Err(Error {
-				messages: vec!(err.to_string().into_ffi_string()),
-				trace: Error::get_backtrace(2),
-			}),
+			StdResult::Err(err) => Result::Err(err.into()),
 		}
 	}
 }
@@ -117,9 +121,9 @@ impl<T> Result<T> {
 		}
 	}
 	
-	pub fn context(mut self, msg: impl Display) -> Self {
+	pub fn context(mut self, msg: impl ToString) -> Self {
 		let Err(error) = &mut self else { return self; };
-		error.messages.push(msg.to_string().into_ffi_string());
+		error.contexts.push(msg.to_string().into_ffi_string());
 		self
 	}
 	
@@ -129,7 +133,7 @@ impl<T> Result<T> {
 		F: FnOnce() -> M,
 	{
 		let Err(error) = &mut self else { return self; };
-		error.messages.push(msg().to_string().to_ffi_string());
+		error.contexts.push(msg().to_string().to_ffi_string());
 		self
 	}
 	

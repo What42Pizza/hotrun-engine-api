@@ -35,7 +35,7 @@ impl<Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, Ret> IsCFunctionPointer for
 
 // taken from rfd:
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
 pub enum MessageLevel {
 	Info,
@@ -43,19 +43,11 @@ pub enum MessageLevel {
 	Error,
 }
 
+#[derive(Debug, Copy, Clone)]
 #[repr(C)]
-pub enum MessageButtons<'a> {
+pub enum MessageButtons {
 	Ok,
 	OkCancel,
 	YesNo,
 	YesNoCancel,
-	/// One customizable button.
-	/// Notice that in Windows, this only works with the feature *common-controls-v6* enabled
-	OkCustom(FFIStr<'a>),
-	/// Two customizable buttons.
-	/// Notice that in Windows, this only works with the feature *common-controls-v6* enabled
-	OkCancelCustom(FFIStr<'a>, FFIStr<'a>),
-	/// Three customizable buttons.
-	/// Notice that in Windows, this only works with the feature *common-controls-v6* enabled
-	YesNoCancelCustom(FFIStr<'a>, FFIStr<'a>, FFIStr<'a>),
 }
