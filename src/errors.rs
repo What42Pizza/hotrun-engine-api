@@ -46,7 +46,7 @@ impl Error {
 	}
 }
 
-impl<T: std::error::Error> From<T> for Error {
+impl<T: core::error::Error> From<T> for Error {
 	fn from(value: T) -> Self {
 		Self::new(value)
 	}
