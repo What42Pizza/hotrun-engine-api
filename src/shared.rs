@@ -7,6 +7,8 @@ use ffi_string::*;
 pub struct HotRunFns {
 	
 	pub exit: extern "C" fn(),
+	pub set_world_tick_rate: extern "C" fn(f32),
+	
 	pub get_fn: extern "C" fn(name: FFIStr) -> Option<extern "C" fn()>,
 	pub set_fn: extern "C" fn(name: FFIStr, func: extern "C" fn()) -> bool,
 	
