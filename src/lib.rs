@@ -29,6 +29,6 @@ pub use ffi_string;
 #[cfg(not(feature = "is-engine-dep"))]
 pub mod for_games;
 #[cfg(not(feature = "is-engine-dep"))]
-pub mod engine_to_game_hooks;
+pub mod engine_hooks;
 pub mod shared;
 pub mod errors;

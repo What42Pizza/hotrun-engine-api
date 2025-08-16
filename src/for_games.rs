@@ -1,4 +1,4 @@
-use crate::{engine_to_game_hooks::HOTRUN_FNS, shared::{IsCFunctionPointer, MessageButtons, MessageLevel}};
+use crate::{engine_hooks::HOTRUN_FNS, shared::{IsCFunctionPointer, MessageButtons, MessageLevel}};
 use std::mem::transmute;
 use ffi_string::*;
 
