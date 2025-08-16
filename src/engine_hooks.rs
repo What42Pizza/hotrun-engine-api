@@ -47,7 +47,7 @@ macro_rules! create_hooks {
 			#[unsafe(no_mangle)]
 			pub extern "C" fn on_load(hotrun_fns: $crate::shared::HotRunFns) -> $crate::errors::Result<()> {
 				unsafe {
-					$crate::engine_to_game_hooks::HOTRUN_FNS = MaybeUninit::new(hotrun_fns);
+					$crate::engine_hooks::HOTRUN_FNS = MaybeUninit::new(hotrun_fns);
 					MODULE_DATA = MaybeUninit::new($static_data_fn()?);
 				}
 				$on_load_fn()
